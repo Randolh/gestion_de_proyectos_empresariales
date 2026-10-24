@@ -10,7 +10,7 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <maven.compiler.release>17</maven.compiler.release>
-        <exec.mainClass>randolh.gestion_de_proyectos_empresariales.Gestion_de_proyectos_empresariales</exec.mainClass>
+        <exec.mainClass>randolh.gestion_de_proyectos_empresariales.Main</exec.mainClass>
     </properties>
     
     <dependencies>

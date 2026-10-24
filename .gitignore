@@ -8,6 +8,10 @@
 # Log file
 *.log
 
+# Sensitive credentials
+src/main/resources/database.properties
+database.properties
+
 # BlueJ files
 *.ctxt
 

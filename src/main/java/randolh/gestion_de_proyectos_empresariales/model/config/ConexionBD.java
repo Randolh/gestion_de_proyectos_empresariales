@@ -17,11 +17,14 @@ public class ConexionBD {
     private Connection conexion;
 
     private ConexionBD() {
-        cargarConfiguracion();
-        conectar();
+        // Constructor privado para el patrón Singleton
     }
 
-    private static void cargarConfiguracion() {
+    private static synchronized void cargarConfiguracion() throws SQLException {
+        if (url != null) {
+            return;
+        }
+
         Properties props = new Properties();
         try (InputStream input = ConexionBD.class.getClassLoader().getResourceAsStream("database.properties")) {
             if (input != null) {
@@ -31,7 +34,7 @@ public class ConexionBD {
                 password = props.getProperty("db.password");
             }
         } catch (IOException e) {
-            System.err.println("Aviso: No se pudo leer database.properties, usando variables de entorno.");
+            throw new SQLException("Error al leer el archivo de configuracion database.properties", e);
         }
 
         // Si existen variables de entorno, tienen prioridad
@@ -44,13 +47,9 @@ public class ConexionBD {
         if (System.getenv("DB_PASSWORD") != null) {
             password = System.getenv("DB_PASSWORD");
         }
-    }
 
-    private void conectar() {
-        try {
-            this.conexion = DriverManager.getConnection(url, user, password);
-        } catch (SQLException e) {
-            System.err.println("Error al conectar a la base de datos: " + e.getMessage());
+        if (url == null || url.trim().isEmpty()) {
+            throw new SQLException("No se encontro configuracion para la base de datos (verifique database.properties o DB_URL).");
         }
     }
 
@@ -61,24 +60,19 @@ public class ConexionBD {
         return instancia;
     }
 
-    public Connection getConexion() {
-        try {
-            if (this.conexion == null || this.conexion.isClosed()) {
-                conectar();
-            }
-        } catch (SQLException e) {
-            System.err.println("Error al verificar estado de la conexion: " + e.getMessage());
+    public Connection getConexion() throws SQLException {
+        if (url == null) {
+            cargarConfiguracion();
+        }
+        if (this.conexion == null || this.conexion.isClosed()) {
+            this.conexion = DriverManager.getConnection(url, user, password);
         }
         return this.conexion;
     }
 
-    public void cerrarConexion() {
-        try {
-            if (this.conexion != null && !this.conexion.isClosed()) {
-                this.conexion.close();
-            }
-        } catch (SQLException e) {
-            System.err.println("Error al cerrar conexion: " + e.getMessage());
+    public void cerrarConexion() throws SQLException {
+        if (this.conexion != null && !this.conexion.isClosed()) {
+            this.conexion.close();
         }
     }
 }

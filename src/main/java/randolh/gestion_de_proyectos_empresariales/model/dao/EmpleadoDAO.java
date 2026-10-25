@@ -7,7 +7,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import randolh.gestion_de_proyectos_empresariales.model.clases.Empleado;
 import randolh.gestion_de_proyectos_empresariales.model.config.ConexionBD;
 
@@ -52,24 +51,23 @@ public class EmpleadoDAO {
         return lista;
     }
 
-    public Optional<Empleado> buscarPorId(int id) throws SQLException {
+    public Empleado buscarPorId(int id) throws SQLException {
         String sql = "SELECT id, nombre, correo, cargo FROM empleados WHERE id = ?";
         Connection conn = ConexionBD.getInstancia().getConexion();
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, id);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    Empleado emp = new Empleado(
+                    return new Empleado(
                             rs.getInt("id"),
                             rs.getString("nombre"),
                             rs.getString("correo"),
                             rs.getString("cargo")
                     );
-                    return Optional.of(emp);
                 }
             }
         }
-        return Optional.empty();
+        return null;
     }
 
     public boolean existePorCorreo(String correo) throws SQLException {

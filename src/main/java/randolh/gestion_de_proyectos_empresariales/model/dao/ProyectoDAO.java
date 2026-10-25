@@ -8,7 +8,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import randolh.gestion_de_proyectos_empresariales.model.clases.EstadoProyecto;
 import randolh.gestion_de_proyectos_empresariales.model.clases.Proyecto;
 import randolh.gestion_de_proyectos_empresariales.model.config.ConexionBD;
@@ -58,14 +57,14 @@ public class ProyectoDAO {
         return lista;
     }
 
-    public Optional<Proyecto> buscarPorId(int id) throws SQLException {
+    public Proyecto buscarPorId(int id) throws SQLException {
         String sql = "SELECT id, nombre, descripcion, fecha_inicio, fecha_fin, estado FROM proyectos WHERE id = ?";
         Connection conn = ConexionBD.getInstancia().getConexion();
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, id);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    Proyecto proy = new Proyecto(
+                    return new Proyecto(
                             rs.getInt("id"),
                             rs.getString("nombre"),
                             rs.getString("descripcion"),
@@ -73,11 +72,10 @@ public class ProyectoDAO {
                             rs.getDate("fecha_fin").toLocalDate(),
                             EstadoProyecto.valueOf(rs.getString("estado"))
                     );
-                    return Optional.of(proy);
                 }
             }
         }
-        return Optional.empty();
+        return null;
     }
 
     public boolean actualizar(Proyecto p) throws SQLException {

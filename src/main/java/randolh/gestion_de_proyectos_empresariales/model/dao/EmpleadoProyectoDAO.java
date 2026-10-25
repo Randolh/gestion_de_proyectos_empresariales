@@ -7,7 +7,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import randolh.gestion_de_proyectos_empresariales.model.clases.Empleado;
 import randolh.gestion_de_proyectos_empresariales.model.clases.EmpleadoProyecto;
 import randolh.gestion_de_proyectos_empresariales.model.clases.EstadoProyecto;
@@ -28,7 +27,7 @@ public class EmpleadoProyectoDAO {
         }
     }
 
-    public Optional<EmpleadoProyecto> buscarAsignacion(int empleadoId, int proyectoId) throws SQLException {
+    public EmpleadoProyecto buscarAsignacion(int empleadoId, int proyectoId) throws SQLException {
         String sql = "SELECT empleado_id, proyecto_id, rol, fecha_asignacion, horas_semanales FROM empleado_proyecto WHERE empleado_id = ? AND proyecto_id = ?";
         Connection conn = ConexionBD.getInstancia().getConexion();
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -36,18 +35,17 @@ public class EmpleadoProyectoDAO {
             ps.setInt(2, proyectoId);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    EmpleadoProyecto ep = new EmpleadoProyecto(
+                    return new EmpleadoProyecto(
                             rs.getInt("empleado_id"),
                             rs.getInt("proyecto_id"),
                             rs.getString("rol"),
                             rs.getDate("fecha_asignacion").toLocalDate(),
                             rs.getInt("horas_semanales")
                     );
-                    return Optional.of(ep);
                 }
             }
         }
-        return Optional.empty();
+        return null;
     }
 
     public boolean asignar(EmpleadoProyecto ep) throws SQLException {

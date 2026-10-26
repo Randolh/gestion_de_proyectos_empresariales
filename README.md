@@ -13,9 +13,8 @@ El diseño del proyecto se rige por los principios **SOLID, KISS, DRY y POLA**, 
 4. [Paso 2: Inicializar la Base de Datos MySQL](#paso-2-inicializar-la-base-de-datos-mysql)
 5. [Paso 3: Configurar Credenciales de Conexión](#paso-3-configurar-credenciales-de-conexión)
 6. [Paso 4: Abrir y Ejecutar en Apache NetBeans](#paso-4-abrir-y-ejecutar-en-apache-netbeans)
-7. [Paso 5 (Alternativo): Ejecutar desde la Terminal con Maven](#paso-5-alternativo-ejecutar-desde-la-terminal-con-maven)
-8. [Estructura del Proyecto](#estructura-del-proyecto)
-9. [Reglas de Negocio Implementadas](#reglas-de-negocio-implementadas)
+7. [Estructura del Proyecto](#estructura-del-proyecto)
+8. [Reglas de Negocio Implementadas](#reglas-de-negocio-implementadas)
 
 ---
 
